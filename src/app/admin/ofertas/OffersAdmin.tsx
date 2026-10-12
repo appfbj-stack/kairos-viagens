@@ -4,7 +4,23 @@ import { useRouter } from 'next/navigation';
 
 interface Offer {
   id: string; slug: string; type: string; title: string; status: string;
+  subtitle?: string | null;
+  description?: string | null;
+  originCity?: string | null;
+  originIata?: string | null;
+  destinationCity?: string | null;
+  destinationIata?: string | null;
+  departureDate?: string | null;
+  returnDate?: string | null;
+  nights?: number | null;
+  carrier?: string | null;
+  hotelName?: string | null;
   priceCents: number; currency: string;
+  priceOldCents?: number | null;
+  heroImage?: string | null;
+  expiresAt?: string | null;
+  featured?: boolean;
+  sourceUrl?: string | null;
   partner: { id: string; name: string } | null;
   destination: { id: string; name: string } | null;
   updatedAt: string;
