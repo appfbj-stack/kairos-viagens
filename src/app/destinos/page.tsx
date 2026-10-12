@@ -1,10 +1,11 @@
+﻿export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Destinos',
-  description: 'Descubra destinos nacionais e internacionais para sua próxima viagem.',
+  description: 'Descubra destinos nacionais e internacionais para sua prÃ³xima viagem.',
 };
 export const revalidate = 600;
 
@@ -32,7 +33,7 @@ export default async function DestinosPage() {
                 {d.heroImage ? (
                   <img src={d.heroImage} alt={d.name} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-white text-5xl">📍</div>
+                  <div className="w-full h-full flex items-center justify-center text-white text-5xl">ðŸ“</div>
                 )}
                 {d.popular && (
                   <span className="absolute top-2 right-2 badge bg-amber-500 text-white">Popular</span>
@@ -41,7 +42,7 @@ export default async function DestinosPage() {
               <div className="p-4">
                 <h3 className="font-bold group-hover:text-brand-600">{d.name}</h3>
                 <p className="text-xs text-slate-500">
-                  {d.country}{d.state ? ` · ${d.state}` : ''}
+                  {d.country}{d.state ? ` Â· ${d.state}` : ''}
                   {d.iataCode ? ` (${d.iataCode})` : ''}
                 </p>
                 {d.description && (
@@ -55,3 +56,4 @@ export default async function DestinosPage() {
     </section>
   );
 }
+

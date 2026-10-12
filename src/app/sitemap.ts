@@ -1,3 +1,4 @@
+﻿export const dynamic = 'force-dynamic';
 import type { MetadataRoute } from 'next';
 import { prisma } from '@/lib/prisma';
 
@@ -35,3 +36,4 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...destinations.map((d) => ({ url: `${site}/destinos/${d.slug}`, lastModified: d.updatedAt, changeFrequency: 'weekly' as const, priority: 0.6 })),
   ];
 }
+

@@ -1,3 +1,4 @@
+﻿export const dynamic = 'force-dynamic';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { SearchBox } from '@/components/SearchBox';
@@ -29,10 +30,10 @@ export default async function HomePage() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 py-12 sm:py-16">
           <div className="text-center max-w-3xl mx-auto mb-8">
             <h1 className="text-3xl sm:text-5xl font-black leading-tight">
-              Encontre a próxima viagem dos seus sonhos
+              Encontre a prÃ³xima viagem dos seus sonhos
             </h1>
             <p className="mt-3 text-base sm:text-lg text-white/90">
-              Compare voos, hotéis e pacotes. Economize tempo e dinheiro em um só lugar.
+              Compare voos, hotÃ©is e pacotes. Economize tempo e dinheiro em um sÃ³ lugar.
             </p>
           </div>
           <SearchBox />
@@ -43,10 +44,10 @@ export default async function HomePage() {
         <div className="flex items-end justify-between mb-5">
           <div>
             <h2 className="text-2xl font-extrabold text-slate-900">Ofertas em destaque</h2>
-            <p className="text-sm text-slate-500 mt-1">Selecionadas a dedo pra você economizar.</p>
+            <p className="text-sm text-slate-500 mt-1">Selecionadas a dedo pra vocÃª economizar.</p>
           </div>
           <Link href="/ofertas" className="text-sm font-semibold text-brand-600 hover:text-brand-700">
-            Ver todas →
+            Ver todas â†’
           </Link>
         </div>
         {validFeatured.length === 0 ? (
@@ -92,9 +93,9 @@ export default async function HomePage() {
                   href={`/destinos/${d.slug}`}
                   className="card p-4 hover:shadow-md transition group"
                 >
-                  <div className="text-3xl mb-1">📍</div>
+                  <div className="text-3xl mb-1">ðŸ“</div>
                   <div className="font-bold text-slate-900 group-hover:text-brand-600">{d.name}</div>
-                  <div className="text-xs text-slate-500">{d.country}{d.state ? ` · ${d.state}` : ''}</div>
+                  <div className="text-xs text-slate-500">{d.country}{d.state ? ` Â· ${d.state}` : ''}</div>
                 </Link>
               ))}
             </div>
@@ -103,12 +104,12 @@ export default async function HomePage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 sm:px-6 py-10">
-        <h2 className="text-2xl font-extrabold text-slate-900 mb-5">Por que usar a Kairós Viagens?</h2>
+        <h2 className="text-2xl font-extrabold text-slate-900 mb-5">Por que usar a KairÃ³s Viagens?</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
-            { icon: '🔎', title: 'Pesquisa inteligente', desc: 'Comparamos várias fontes em segundos.' },
-            { icon: '💸', title: 'Preços em real', desc: 'Valores claros em BRL quando fornecidos.' },
-            { icon: '🛡️', title: 'Reserva segura', desc: 'A reserva é concluída direto no site do parceiro.' },
+            { icon: 'ðŸ”Ž', title: 'Pesquisa inteligente', desc: 'Comparamos vÃ¡rias fontes em segundos.' },
+            { icon: 'ðŸ’¸', title: 'PreÃ§os em real', desc: 'Valores claros em BRL quando fornecidos.' },
+            { icon: 'ðŸ›¡ï¸', title: 'Reserva segura', desc: 'A reserva Ã© concluÃ­da direto no site do parceiro.' },
           ].map((f) => (
             <div key={f.title} className="card p-5">
               <div className="text-3xl">{f.icon}</div>
@@ -121,3 +122,4 @@ export default async function HomePage() {
     </>
   );
 }
+

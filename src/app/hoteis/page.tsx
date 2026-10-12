@@ -1,9 +1,10 @@
+﻿export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma';
 import { SearchBox } from '@/components/SearchBox';
 import { OfferCard } from '@/components/OfferCard';
 import { Metadata } from 'next';
 
-export const metadata: Metadata = { title: 'Hotéis' };
+export const metadata: Metadata = { title: 'HotÃ©is' };
 export const revalidate = 300;
 
 export default async function HoteisPage({ searchParams }: { searchParams: Record<string, string> }) {
@@ -29,8 +30,8 @@ export default async function HoteisPage({ searchParams }: { searchParams: Recor
     <>
       <section className="bg-gradient-to-br from-brand-700 to-brand-500 text-white">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 py-8">
-          <h1 className="text-3xl sm:text-4xl font-black mb-1">Hotéis</h1>
-          <p className="text-white/80 text-sm">Encontre hospedagem com bom custo-benefício.</p>
+          <h1 className="text-3xl sm:text-4xl font-black mb-1">HotÃ©is</h1>
+          <p className="text-white/80 text-sm">Encontre hospedagem com bom custo-benefÃ­cio.</p>
         </div>
       </section>
       <section className="mx-auto max-w-6xl px-4 sm:px-6 -mt-6 relative z-10">
@@ -38,7 +39,7 @@ export default async function HoteisPage({ searchParams }: { searchParams: Recor
       </section>
       <section className="mx-auto max-w-6xl px-4 sm:px-6 py-8">
         <h2 className="text-lg font-bold mb-4">
-          {valid.length} {valid.length === 1 ? 'hotel encontrado' : 'hotéis encontrados'}
+          {valid.length} {valid.length === 1 ? 'hotel encontrado' : 'hotÃ©is encontrados'}
           {destino && ` em ${destino}`}
         </h2>
         {valid.length === 0 ? (
@@ -64,3 +65,4 @@ export default async function HoteisPage({ searchParams }: { searchParams: Recor
     </>
   );
 }
+

@@ -1,3 +1,4 @@
+﻿export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma';
 import { OfferCard } from '@/components/OfferCard';
 import { Metadata } from 'next';
@@ -5,14 +6,14 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Todas as ofertas',
-  description: 'Catálogo completo de passagens, hotéis e pacotes com preços em real.',
+  description: 'CatÃ¡logo completo de passagens, hotÃ©is e pacotes com preÃ§os em real.',
 };
 export const revalidate = 300;
 
 const TYPES = [
   { value: '', label: 'Todos' },
   { value: 'FLIGHT', label: 'Voos' },
-  { value: 'HOTEL', label: 'Hotéis' },
+  { value: 'HOTEL', label: 'HotÃ©is' },
   { value: 'PACKAGE', label: 'Pacotes' },
 ];
 
@@ -37,7 +38,7 @@ export default async function OfertasPage({ searchParams }: { searchParams: Reco
         <div className="mx-auto max-w-6xl px-4 sm:px-6 py-8">
           <h1 className="text-3xl sm:text-4xl font-black text-slate-900">Todas as ofertas</h1>
           <p className="text-sm text-slate-500 mt-1">
-            {valid.length} {valid.length === 1 ? 'oferta disponível' : 'ofertas disponíveis'}.
+            {valid.length} {valid.length === 1 ? 'oferta disponÃ­vel' : 'ofertas disponÃ­veis'}.
           </p>
         </div>
       </section>
@@ -83,3 +84,4 @@ export default async function OfertasPage({ searchParams }: { searchParams: Reco
     </>
   );
 }
+

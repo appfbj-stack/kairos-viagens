@@ -1,3 +1,4 @@
+﻿export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma';
 import { SearchBox } from '@/components/SearchBox';
 import { OfferCard } from '@/components/OfferCard';
@@ -69,3 +70,4 @@ export default async function VoosPage({ searchParams }: { searchParams: Record<
     </>
   );
 }
+
