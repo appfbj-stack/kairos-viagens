@@ -48,8 +48,8 @@ export function safeRedirectUrl(url: string, fallback = '/'): string {
   return url;
 }
 
-export function parseDate(s?: string | null): Date | null {
+export function parseDate(s?: string | Date | null): Date | null {
   if (!s) return null;
-  const d = new Date(s);
+  const d = s instanceof Date ? s : new Date(s);
   return isNaN(d.getTime()) ? null : d;
 }

@@ -99,7 +99,7 @@ export function ParceirosAdmin({ partners: initial }: { partners: Partner[] }) {
               <div><label className="label">Status</label><select className="input" value={editing.status ?? 'test'} onChange={(e) => setEditing({ ...editing, status: e.target.value })}>{STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}</select></div>
               <div><label className="label">Affiliate ID</label><input className="input" value={editing.affiliateId ?? ''} onChange={(e) => setEditing({ ...editing, affiliateId: e.target.value })} /></div>
               <div><label className="label">Base URL</label><input className="input" value={editing.affiliateBaseUrl ?? ''} onChange={(e) => setEditing({ ...editing, affiliateBaseUrl: e.target.value })} /></div>
-              <div className="col-span-2"><label className="label">Template de redirect (use ${targetUrl}, ${affiliateId}, ${offerId})</label><input className="input font-mono text-xs" value={editing.redirectTemplate ?? ''} onChange={(e) => setEditing({ ...editing, redirectTemplate: e.target.value })} /></div>
+              <div className="col-span-2"><label className="label">{'Template de redirect (use ${targetUrl}, ${affiliateId}, ${offerId})'}</label><input className="input font-mono text-xs" value={editing.redirectTemplate ?? ''} onChange={(e) => setEditing({ ...editing, redirectTemplate: e.target.value })} /></div>
             </div>
             <div className="mt-5 flex justify-end gap-2">
               <button onClick={() => setEditing(null)} className="btn-secondary">Cancelar</button>
