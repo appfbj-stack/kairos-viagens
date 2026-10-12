@@ -1,0 +1,211 @@
+// ── Prisma schema — Kairós Viagens ───────────────────────────────────────────
+// Banco: PostgreSQL dedicado no kairos-shared-pg
+// Documentação: ver README.md
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Auth admin ──────────────────────────────────────────────────────────────
+model AdminUser {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  role         String    @default("admin") // admin | super_admin
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  sessions     AdminSession[]
+
+  @@index([email])
+}
+
+model AdminSession {
+  id        String    @id @default(uuid())
+  userId    String
+  user      AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  userAgent String?
+  ip        String?
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+// ── Parceiros (Skyscanner, Booking, Amadeus…) ───────────────────────────────
+model Partner {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  name        String
+  type        String   // 'flight' | 'hotel' | 'package'
+  description String?
+  logoUrl     String?
+  websiteUrl  String?
+  // Afiliado: token + base URL pra montar o link
+  affiliateId String?
+  affiliateBaseUrl String?
+  // Configuração de redirect: padrão ${affiliateBaseUrl}?url=${targetUrl}
+  redirectTemplate String? // ex: "${affiliateBaseUrl}?aff=${affiliateId}&dest=${targetUrl}"
+  // Status
+  status      String   @default("test") // 'test' | 'demo' | 'production' | 'disabled'
+  // Metadados
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  offers      Offer[]
+  clicks      AffiliateClick[]
+
+  @@index([type, status])
+}
+
+// ── Destinos ────────────────────────────────────────────────────────────────
+model Destination {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  name        String
+  country     String
+  state       String?
+  city        String?
+  description String?
+  heroImage   String?
+  // IATA principal (aeroporto) — opcional
+  iataCode    String?
+  // Metadados
+  latitude    Float?
+  longitude   Float?
+  popular     Boolean  @default(false)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  offers      Offer[]
+
+  @@index([country, popular])
+  @@index([slug])
+}
+
+// ── Ofertas ─────────────────────────────────────────────────────────────────
+enum OfferType {
+  FLIGHT
+  HOTEL
+  PACKAGE
+}
+
+model Offer {
+  id            String    @id @default(uuid())
+  slug          String    @unique
+  type          OfferType
+  title         String
+  subtitle      String?
+  description   String?
+  // Origem/destino (para voos)
+  originCity    String?
+  originIata    String?
+  destinationId String?
+  destination   Destination? @relation(fields: [destinationId], references: [id], onDelete: SetNull)
+  destinationCity String?
+  destinationIata String?
+  // Datas e estadia
+  departureDate DateTime?
+  returnDate    DateTime?
+  nights        Int?
+  // Companhia aérea / hotel
+  carrier       String?
+  hotelName     String?
+  // Preço
+  priceCents    Int       // preço em centavos (BRL)
+  currency      String    @default("BRL")
+  priceOldCents  Int?     // preço antigo (riscado) para promoções
+  // Imagens
+  heroImage     String?
+  galleryJson   String?   // JSON array de URLs
+  // Fonte
+  partnerId     String?
+  partner       Partner?  @relation(fields: [partnerId], references: [id], onDelete: SetNull)
+  // Status / validade
+  status        String    @default("active") // active | paused | expired
+  expiresAt     DateTime?
+  publishedAt   DateTime  @default(now())
+  // Metadata
+  tags          String?   // CSV tags: ["praia","familia","luxo"]
+  featured      Boolean   @default(false)
+  // Métricas internas
+  views         Int       @default(0)
+  clicks        Int       @default(0)
+  // URL original pra onde o afiliado aponta (validado no redirect)
+  sourceUrl     String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  clicksLog     AffiliateClick[]
+  priceHistory  OfferPriceHistory[]
+
+  @@index([type, status, featured])
+  @@index([destinationId])
+  @@index([partnerId])
+  @@index([publishedAt])
+  @@index([expiresAt])
+}
+
+model OfferPriceHistory {
+  id         String   @id @default(uuid())
+  offerId    String
+  offer      Offer    @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  priceCents Int
+  currency   String   @default("BRL")
+  capturedAt DateTime @default(now())
+
+  @@index([offerId, capturedAt])
+}
+
+// ── Links de afiliados (cliques rastreados) ───────────────────────────────
+model AffiliateClick {
+  id         String   @id @default(uuid())
+  offerId    String
+  offer      Offer    @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  partnerId  String?
+  partner    Partner? @relation(fields: [partnerId], references: [id], onDelete: SetNull)
+  // Origem do clique
+  ip         String?
+  userAgent  String?
+  referer    String?
+  // Geolocalização básica (a partir do IP — placeholder; opcional)
+  country    String?
+  // Controle
+  redirected Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  @@index([offerId, createdAt])
+  @@index([partnerId, createdAt])
+}
+
+// ── Logs de pesquisa (analytics + futuras features) ────────────────────────
+model SearchLog {
+  id          String   @id @default(uuid())
+  type        String   // 'flight' | 'hotel' | 'package'
+  queryJson   String   // JSON com os parâmetros
+  resultsCount Int     @default(0)
+  ip          String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  @@index([type, createdAt])
+}
+
+// ── Pesquisas salvas / alertas de preço (estrutura; feature opcional) ─────
+model SavedSearch {
+  id         String   @id @default(uuid())
+  email      String?
+  type       String
+  queryJson  String
+  alertEnabled Boolean @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([email])
+}

@@ -1,0 +1,46 @@
+version: "3.9"
+services:
+  app:
+    build: .
+    container_name: kairos-viagens-app
+    restart: unless-stopped
+    ports:
+      - "3055:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_URL=postgresql://kairos_viagens:${DB_PASSWORD}@kairos-shared-pg:5432/kairos_viagens_db?schema=public
+      - JWT_SECRET=${JWT_SECRET}
+      - NEXT_PUBLIC_SITE_URL=https://viagens.fbautomacao.space
+      - ADMIN_BOOTSTRAP_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_BOOTSTRAP_PASSWORD=${ADMIN_PASSWORD}
+    networks:
+      - default
+      - dokploy-network
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      - migrate
+
+  migrate:
+    image: node:20-alpine
+    container_name: kairos-viagens-migrate
+    networks:
+      - default
+      - dokploy-network
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: sh -c "apk add --no-cache openssl && npx prisma migrate deploy && npx tsx prisma/seed.ts"
+    environment:
+      - DATABASE_URL=postgresql://kairos_viagens:${DB_PASSWORD}@kairos-shared-pg:5432/kairos_viagens_db?schema=public
+    profiles: ["never"]
+    restart: "no"
+
+networks:
+  dokploy-network:
+    external: true
