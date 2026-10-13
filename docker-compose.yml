@@ -25,7 +25,7 @@ services:
       start_period: 30s
 
   migrate:
-    image: node:20-alpine
+    image: kairos-viagens-app:latest
     container_name: kairos-viagens-migrate
     networks:
       - default
@@ -33,7 +33,7 @@ services:
     volumes:
       - .:/app
     working_dir: /app
-    command: sh -c "apk add --no-cache openssl && npx prisma migrate deploy && npx tsx prisma/seed.ts"
+    entrypoint: ["sh", "-c", "npx prisma migrate deploy && npx tsx prisma/seed.ts"]
     environment:
       - DATABASE_URL=postgresql://kairos_viagens:${DB_PASSWORD}@kairos-shared-pg:5432/kairos_viagens_db?schema=public
     restart: "no"
